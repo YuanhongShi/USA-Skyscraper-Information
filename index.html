@@ -1,10 +1,190 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+    <title>Big Data for American Skyscrapers</title>
+
+
+
+    <link rel="stylesheet" type="text/css" href="./bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+
+    <link rel="shortcut icon"  href="./favicon.ico"/>
+
+    <!-- Bootstrap JS is a JS library with pre-made functionality. Requires jQuery and popper.js to run.
+         JQuery is a very powerful, general-purpose library that can manipulate the DOM
+         Popper is a new positioning library for tooltips. It was annoying to integrate locally, so using a web link here.-->
+    <script src="./jquery-3.2.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="./bootstrap.js"></script>
+    <script src="./queue.min.js"></script>
+    <script src="./d3.v4.2.6.min.js"></script>
+
+
+
 </head>
+
 <body>
-<h1>Hello World<h1>
-	<p>I'm hosted with GitHub Pages.</p>
+
+
+    <div class ="aspectwrapper">
+        <div> <p class="anim-typewriter  line-1">
+            <b>Architecture information throughout USA</b>
+        </p>
+        </div>
+        <div style="color: darkgray;font-family: Arcon;font-size: 15px; float: right;" class="line-2">
+            Architecture Research Studio Work
+        </div>
+
+        <div style = "font-family: Arcon;font-size: 15px;">
+            <p  class = "titleText line-3">
+                There are many big cities around the USA. So, the number of skyscrapers is quite large, form of them are also various. This analysis is trying to show some basic information of USA's skyscrapers in the big cities, especially in the downtown area.
+            </p>
+        </div>
+
+    </div>
+
+<div class="row">
+
+    <div class="welcomeBox" id="welcomeForm">
+        <svg width = 100% height = 100% id = "svg0"></svg>
+    </div>
+
+    <form class="controlBox" id="cityForm">
+
+        <label for="city">CITIES IN USA</label>
+
+        <select id="city">
+            <option>BOSTON IN MA </option>
+            <option>NEW YORK IN NY</option>
+            <option>CHICAGO IN IL</option>
+            <option>LOS ANGELES IN CA</option>
+            <option>PHOENIX IN AZ</option>
+            <option>SEATTLE IN WA</option>
+        </select>
+
+    </form>
+
+    <div class="svgBox" id="svgdiv1">
+        <svg width="100%" height="100%" id="svg1"></svg>
+    </div>
+
+    <div class="svgBox" id="svgdiv2">
+        <svg width="100%" height="100%" id="svg2"></svg>
+    </div>
+
+</div>
+
+
+
+    <div class ="row-link">
+
+        <div class = "buttonBox" id="buttondiv">
+            <!--<button class = "button" id="show_points"><span>Show Points</span></button>-->
+            <button class = "button" id="compare_data"><span>Compare Data</span></button>
+        </div>
+
+    </div>
+
+    <div id="copyRight">
+        Copyright @ Yuanhong Shi Northeastern University
+    </div>
+
+
+
+    <style>
+    body{
+        height: calc(100vh - 4em);
+        padding: 2em;
+        color: #325093;
+        font-family: 'Menlo', monospace;
+        font-size: 14px;
+        background-color: #f8f8f8;
+    }
+
+    .line-1{
+        position: absolute;
+        right: 0;
+        float: right;
+        width: 35em;
+        margin-right: 5%;
+        border-right: 2px solid rgba(255,255,255,.75);
+        font-size: 25px;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        transform: translateY(-50%);
+    }
+    .line-2{
+        position: absolute;
+        right: 0;
+        top:20px;
+        width: 35em;
+        margin-right: 5%;
+        margin-top:5px;
+        border-right: 2px solid rgba(255,255,255,.75);
+        font-size: 100%;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        transform: translateY(-50%);
+    }
+
+    .line-3{
+        position: absolute;
+        right: 0;
+        top:60px;
+        margin-right: 5%;
+        margin-top:5px;
+        border-right: 2px solid rgba(255,255,255,.75);
+        font-size: 100%;
+        text-align: justify;
+        /*white-space: nowrap;*/
+        overflow: hidden;
+        transform: translateY(-50%);
+        word-wrap:break-word;
+        line-height:100%;
+    }
+
+    /* Animation */
+    .anim-typewriter{
+        animation: typewriter 4s steps(60) 1s 1 normal both,
+        blinkTextCursor 500ms steps(60) infinite normal;
+    }
+    @keyframes typewriter{
+        from{width: 0;}
+        to{width: 35em;}
+    }
+    @keyframes blinkTextCursor{
+        from{border-right-color: rgba(255,255,255,.75);}
+        to{border-right-color: transparent;}
+    }
+
+    .aspectwrapper {
+        display: inline-block; /* shrink to fit */
+        width: 100%;           /* whatever width you like */
+        position: relative;    /* so .content can use position: absolute */
+    }
+    .aspectwrapper::after {
+        padding-top: 5%; /* percentage of containing block _width_ */
+        display: block;
+        content: '';
+    }
+
+    .typewrite {
+        font-size: 14px;
+        font-family: Menlo;
+        margin-left: 430px;
+        margin-top: 100px;
+        margin-bottom: 50px;
+        color: #325093;
+
+    }
+
+
+</style>
+
 </body>
+<script src="./index.js"></script>
+
+
 </html>
