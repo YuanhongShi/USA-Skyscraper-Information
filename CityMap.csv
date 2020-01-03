@@ -1,0 +1,11 @@
+x,y,r,fill,stroke,strokewidth,id,name,height,site_area,floor,year,city
+300,500,10,13587F,white,1,a,One Financial Center,590,15000,46,1983,BOSTON IN MA
+300,380,10,3A667F,white,1,b,Equity Office Building,450,92000,32,1974,BOSTON IN MA
+360,300,10,1F8CCC,white,1,c,BlueCross Office by Renzo Piano,910,157935,80,2030,BOSTON IN MA
+480,300,10,27AFFF,white,1,d,First National Bank Building,591,26300,37,1971,BOSTON IN MA
+500,430,10,73CCFF,white,1,e,Keystone Building,400,20760,32,1971,BOSTON IN MA
+270,450,10,13587F,white,1,a,Random House Tower,684,59900,52,2003,NEW YORK IN NY
+270,180,10,3A667F,white,1,b,432 Park Avenue,1396,38335,88,2015,NEW YORK IN NY
+340,180,10,1F8CCC,white,1,c,Verizon World Headquarters,630,63006,40,1974,NEW YORK IN NY
+450,250,10,27AFFF,white,1,d,731 Lexington Avenue,938,22720,55,2004,NEW YORK IN NY
+330,350,10,73CCFF,white,1,e,Metropolitan Tower,716,21820,78,1987,NEW YORK IN NY
