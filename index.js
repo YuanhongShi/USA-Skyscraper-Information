@@ -5,7 +5,7 @@ var height = document.getElementById('svg1').clientHeight;
 var width = document.getElementById('svg0').clientWidth;
 var height = document.getElementById('svg0').clientHeight;
 
-console.log(width);
+//console.log(width);
 
 var marginLeft = 0;
 var marginTop = 0;
@@ -140,6 +140,8 @@ d3.json('./cb_2016_us_state_20m.json', function(dataIn){
             document.getElementById('cityForm').style.display = 'inline-block';
             document.getElementById('svgdiv1').style.display = 'inline-block';
             document.getElementById('svgdiv2').style.display = 'inline-block';
+            document.getElementById('buttondiv_left').style.display = 'inline-block';
+            document.getElementById('buttondiv_left').style.visibility = 'visible';
 
             //var selectDefault = 'BOSTON IN MA';
             var selectValue = d.name;
@@ -176,7 +178,8 @@ d3.select('select')
     .on('change', function(d){
         var selectCity = d3.select('select').property('value');
         console.log(selectCity);
-        document.getElementById('buttondiv').style.visibility = 'hidden';
+        document.getElementById('buttondiv_right').style.display = 'none';
+        document.getElementById('compare_data').textContent = 'Data';
 
         drawMap(selectCity);
 
@@ -190,7 +193,7 @@ function drawMap(selectCity){
         .remove();
     svg1.selectAll('rect')
         .remove();
-    svg1.selectAll('g')
+    svg1.selectAll('.axisGroup')
         .remove();
 
     svg2.selectAll('pattern')
@@ -237,7 +240,7 @@ function drawMap(selectCity){
 
         // create the path
         var pathCity = d3.geoPath().projection(projection.scale(scale));
-        console.log(dataIn.features);
+        //console.log(dataIn.features);
 
         var pathMap= svg1.selectAll('path')
             .data(dataIn.features)
@@ -336,8 +339,9 @@ function drawMap(selectCity){
             })
 
             .on('click', function(d){
-
-                document.getElementById('buttondiv').style.visibility = 'visible';
+                
+                document.getElementById('buttondiv_right').style.display = 'inline-block';
+                document.getElementById('buttondiv_right').style.visibility = 'visible';
 
                 d3.select(this)
                     .attr('fill', 'yellow')
@@ -441,164 +445,212 @@ d3.select('#show_points')
 
 */
 
-d3.select('#compare_data')
+
+////////////////////////Button functions////////////////////////////////////
+//----------------------Button - Back to Home-----------------------------//
+d3.select('#back_Home')
     .on('click', function(){
-        d3.csv('./CityMap.csv', function(dataIn){
+        document.getElementById('welcomeForm').style.display = 'inline-block';
 
-            var selectCity = d3.select('select').property('value');
+        document.getElementById('cityForm').style.display = 'none';
+        document.getElementById('svgdiv1').style.display = 'none';
+        document.getElementById('svgdiv2').style.display = 'none';
+        document.getElementById('buttondiv_left').style.display = 'none';
+        document.getElementById('buttondiv_right').style.display = 'none';
+});
 
-            nestedData = d3.nest()
-                .key(function(d){return d.city})
-                .entries(dataIn);
+//----------------------Button - Compare data-----------------------------//
+d3.select('#compare_data')
+    .on('click', function(){      
+        var text = document.getElementById('compare_data').textContent;
+        if (text == 'Data') {
+            document.getElementById('compare_data').textContent = 'Clear';
+            d3.csv('./CityMap.csv', function(dataIn){
+                var selectCity = d3.select('select').property('value');    
+                nestedData = d3.nest()
+                    .key(function(d){return d.city})
+                    .entries(dataIn);              
+    
+                var dataCity = dataIn.filter(function(d){
+                    return d.city == selectCity;});
+    
+                scaleX_chart.domain(dataCity.map(function(d){
+                        return d.id;
+                    })
+                );
+      
+                var chartMarginleft = 50;
+                var chartMargintop = 20;
+        
+    /////////////////----------------lighter the background----------------------------//////////////////
+    
+                svg1.selectAll('circle')
+                    .transition()
+                    .duration(1000)
+                    .attr('opacity', .2);
+    
+                svg1.selectAll('path')
+                    .transition()
+                    .duration(1000)
+                    .attr('opacity', .2);
+    
+    
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' + chartMarginleft + ',' + (chartMargintop+chartBarheight) + ')')
+                    .call(d3.axisBottom(scaleX_chart));
+                
+                svg1.append('text')
+                    .attr('class', 'axisGroup')
+                    .attr('transform','translate(' + (chartMarginleft+chartBarwidth/2)+ ',' + (chartMargintop+chartBarheight*1.2) + ')')
+                    .style('text-anchor', 'middle')
+                    .text('Floors');
+    
+                scaleY_floor.domain([0,d3.max(dataCity.map(function(d){
+                    return d.floor;
+                }))]);
+    
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' + chartMarginleft + ',' + chartMargintop + ')')
+                    .call(d3.axisLeft(scaleY_floor));
+    
+    
+                svg1.selectAll('.bars')
+                    .data(dataCity)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'floor')
+                    .attr('fill', function(d){
+                        return '#'+d.fill;
+                    });
+    
+    
+                drawBars_floor(dataCity,chartMarginleft,chartMargintop);
+    
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' + (2*chartMarginleft + chartBarwidth)+',' + (chartMargintop+chartBarheight) + ')')
+                    .call(d3.axisBottom(scaleX_chart));
+       
+                scaleY_height.domain([0,d3.max(dataCity.map(function(d){
+                    return +d.height;
+                }))]);
 
-            //console.log(nestedData);
+                svg1.append('text')
+                    .attr('class', 'axisGroup')
+                    .attr('transform','translate(' + (2*chartMarginleft+chartBarwidth*1.5)+ ',' + (chartMargintop+chartBarheight*1.2) + ')')
+                    .style('text-anchor', 'middle')
+                    .text('Height');
+       
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' +(2*chartMarginleft + chartBarwidth)+ ',' + chartMargintop + ')')
+                    .call(d3.axisLeft(scaleY_height));
+    
+                svg1.selectAll('.bars')
+                    .data(dataCity)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'height')
+                    .attr('fill', function(d){
+                        return '#'+d.fill;
+                    });
+    
+                drawBars_height(dataCity,(2*chartMarginleft + chartBarwidth),chartMargintop);
+       
+                ////////////////////////////////////////////////////////////////////////////////////////////////////
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' + chartMarginleft+',' + (2*chartMargintop+3*chartBarheight) + ')')
+                    .call(d3.axisBottom(scaleX_chart));    
+    
+                scaleY_site_area.domain([2000,d3.max(dataCity.map(function(d){
+                    //console.log(d.site_area);
+                    return +d.site_area;
+                }))]);    
+                
+                //console.log(dataCity.map(function(d){
+                //    return d.site_area;
+                //}));   
+                //console.log(scaleY_site_area.domain());
+    
+                svg1.append('text')
+                    .attr('class', 'axisGroup')
+                    .attr('transform','translate(' + (chartMarginleft+chartBarwidth/2)+ ',' + (2*chartMargintop+chartBarheight*3.2) + ')')
+                    .style('text-anchor', 'middle')
+                    .text('Sqf');
+                
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' +chartMarginleft+ ',' + (2*chartMargintop + 2*chartBarheight)+ ')')
+                    .call(d3.axisLeft(scaleY_site_area));
+    
+                svg1.selectAll('.bars')
+                    .data(dataCity)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'site_area')
+                    .attr('fill', function(d){
+                        return '#'+d.fill;
+                    });
+    
+                drawBars_site_area(dataCity,chartMarginleft,(2*chartMargintop+2*chartBarheight));
+    
+                ////////////////////////////////////////////////////////////////////////////////////////////////////
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' + (2*chartMarginleft + chartBarwidth)+',' + (2*chartMargintop+3*chartBarheight) + ')')
+                    .call(d3.axisBottom(scaleX_chart));
+    
+    
+                scaleY_year.domain([1950,d3.max(dataCity.map(function(d){
+                    return d.year;
+                }))]);
+    
+                svg1.append('text')
+                    .attr('class', 'axisGroup')
+                    .attr('transform','translate(' + (2*chartMarginleft+chartBarwidth*1.5)+ ',' + (2*chartMargintop+chartBarheight*3.2) + ')')
+                    .style('text-anchor', 'middle')
+                    .text('Built Years');
 
-            var dataCity = dataIn.filter(function(d){
-                return d.city == selectCity;});
-           // console.log(dataCity);
-
-            scaleX_chart.domain(dataCity.map(function(d){
-                    return d.id;
-                })
-            );
-
-
-            var chartMarginleft = 50;
-            var chartMargintop = 20;
-
-
-
-/////////////////----------------lighter the background----------------------------//////////////////
-
+                svg1.append('g')
+                    .attr('class', 'axisGroup')
+                    .attr('transform', 'translate(' +(2*chartMarginleft + chartBarwidth)+ ',' + (2*chartMargintop + 2*chartBarheight)+ ')')
+                    .call(d3.axisLeft(scaleY_year));
+    
+                svg1.selectAll('.bars')
+                    .data(dataCity)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'year')
+                    .attr('fill', function(d){
+                        return '#'+d.fill;
+                    });
+    
+                drawBars_year(dataCity,(2*chartMarginleft + chartBarwidth),(2*chartMargintop+2*chartBarheight));                
+            });
+    
+        } else {
+            document.getElementById('compare_data').textContent = 'Data';
             svg1.selectAll('circle')
-                .transition()
-                .duration(1000)
-                .attr('opacity', .2);
-
+                    .transition()
+                    .duration(1000)
+                    .attr('opacity', 1);
+    
             svg1.selectAll('path')
                 .transition()
                 .duration(1000)
-                .attr('opacity', .2);
+                .attr('opacity', 1);
+            
+            svg1.selectAll('.axisGroup')
+                .remove();
 
+            svg1.selectAll('rect')
+                .remove();
+            
+        }
 
-            svg1.append('g')
-                .attr('transform', 'translate(' + chartMarginleft + ',' + (chartMargintop+chartBarheight) + ')')
-                .call(d3.axisBottom(scaleX_chart));
-
-
-            scaleY_floor.domain([0,d3.max(dataCity.map(function(d){
-                return d.floor;
-            }))]);
-
-            svg1.append('g')
-                .attr('transform', 'translate(' + chartMarginleft + ',' + chartMargintop + ')')
-                .call(d3.axisLeft(scaleY_floor));
-
-
-            svg1.selectAll('.bars')
-                .data(dataCity)
-                .enter()
-                .append('rect')
-                .attr('class', 'floor')
-                .attr('fill', function(d){
-                    return '#'+d.fill;
-                });
-
-
-            drawBars_floor(dataCity,chartMarginleft,chartMargintop);
-
-            svg1.append('g')
-                .attr('transform', 'translate(' + (2*chartMarginleft + chartBarwidth)+',' + (chartMargintop+chartBarheight) + ')')
-                .call(d3.axisBottom(scaleX_chart));
-
-
-            scaleY_height.domain([0,d3.max(dataCity.map(function(d){
-                return +d.height;
-            }))]);
-
-            //console.log(scaleY_height.domain());
-
-            svg1.append('g')
-                .attr('transform', 'translate(' +(2*chartMarginleft + chartBarwidth)+ ',' + chartMargintop + ')')
-                .call(d3.axisLeft(scaleY_height));
-
-            svg1.selectAll('.bars')
-                .data(dataCity)
-                .enter()
-                .append('rect')
-                .attr('class', 'height')
-                .attr('fill', function(d){
-                    return '#'+d.fill;
-                });
-
-            drawBars_height(dataCity,(2*chartMarginleft + chartBarwidth),chartMargintop);
-
-
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            svg1.append('g')
-                .attr('transform', 'translate(' + chartMarginleft+',' + (2*chartMargintop+3*chartBarheight) + ')')
-                .call(d3.axisBottom(scaleX_chart));
-
-
-            scaleY_site_area.domain([2000,d3.max(dataCity.map(function(d){
-                console.log(d.site_area);
-                return +d.site_area;
-            }))]);
-
-
-
-            console.log(dataCity.map(function(d){
-
-                return d.site_area;
-            }));
-
-            console.log(scaleY_site_area.domain());
-
-            svg1.append('g')
-                .attr('transform', 'translate(' +chartMarginleft+ ',' + (2*chartMargintop + 2*chartBarheight)+ ')')
-                .call(d3.axisLeft(scaleY_site_area));
-
-            svg1.selectAll('.bars')
-                .data(dataCity)
-                .enter()
-                .append('rect')
-                .attr('class', 'site_area')
-                .attr('fill', function(d){
-                    return '#'+d.fill;
-                });
-
-            drawBars_site_area(dataCity,chartMarginleft,(2*chartMargintop+2*chartBarheight));
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            svg1.append('g')
-                .attr('transform', 'translate(' + (2*chartMarginleft + chartBarwidth)+',' + (2*chartMargintop+3*chartBarheight) + ')')
-                .call(d3.axisBottom(scaleX_chart));
-
-
-            scaleY_year.domain([1950,d3.max(dataCity.map(function(d){
-                return d.year;
-            }))]);
-
-
-            svg1.append('g')
-                .attr('transform', 'translate(' +(2*chartMarginleft + chartBarwidth)+ ',' + (2*chartMargintop + 2*chartBarheight)+ ')')
-                .call(d3.axisLeft(scaleY_year));
-
-            svg1.selectAll('.bars')
-                .data(dataCity)
-                .enter()
-                .append('rect')
-                .attr('class', 'year')
-                .attr('fill', function(d){
-                    return '#'+d.fill;
-                });
-
-            drawBars_year(dataCity,(2*chartMarginleft + chartBarwidth),(2*chartMargintop+2*chartBarheight));
-
-
-
-        });
     });
 
 

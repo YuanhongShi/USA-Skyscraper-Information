@@ -43,44 +43,50 @@
 
     </div>
 
-<div class="row">
+    <div class="row">
 
-    <div class="welcomeBox" id="welcomeForm">
-        <svg width = 100% height = 100% id = "svg0"></svg>
+        <div class="welcomeBox" id="welcomeForm">
+            <svg width = 100% height = 100% id = "svg0"></svg>
+        </div>
+
+        <div class = "sidebarContainer">
+            <form class="controlBox" id="cityForm">
+
+                <label for="city">CITIES IN USA</label>
+    
+                <select id="city">
+                    <option>BOSTON IN MA </option>
+                    <option>NEW YORK IN NY</option>
+                    <option>CHICAGO IN IL</option>
+                    <option>LOS ANGELES IN CA</option>
+                    <option>PHOENIX IN AZ</option>
+                    <option>SEATTLE IN WA</option>
+                </select>
+                   
+            </form>
+            
+        </div>
+        
+
+        <div class="svgBox" id="svgdiv1">
+            <svg width="100%" height="100%" id="svg1"></svg>
+        </div>
+
+        <div class="svgBox" id="svgdiv2">
+            <svg width="100%" height="100%" id="svg2"></svg>
+        </div>
+
     </div>
-
-    <form class="controlBox" id="cityForm">
-
-        <label for="city">CITIES IN USA</label>
-
-        <select id="city">
-            <option>BOSTON IN MA </option>
-            <option>NEW YORK IN NY</option>
-            <option>CHICAGO IN IL</option>
-            <option>LOS ANGELES IN CA</option>
-            <option>PHOENIX IN AZ</option>
-            <option>SEATTLE IN WA</option>
-        </select>
-
-    </form>
-
-    <div class="svgBox" id="svgdiv1">
-        <svg width="100%" height="100%" id="svg1"></svg>
-    </div>
-
-    <div class="svgBox" id="svgdiv2">
-        <svg width="100%" height="100%" id="svg2"></svg>
-    </div>
-
-</div>
 
 
 
     <div class ="row-link">
+        <div class = "buttonHome" id="buttondiv_left">         
+            <button class = "button" id="back_Home"><span>Home</span></button>
+        </div>
 
-        <div class = "buttonBox" id="buttondiv">
-            <!--<button class = "button" id="show_points"><span>Show Points</span></button>-->
-            <button class = "button" id="compare_data"><span>Compare Data</span></button>
+        <div class = "buttonData" id="buttondiv_right">
+            <button class = "button" id="compare_data"><span>Data</span></button>
         </div>
 
     </div>
@@ -90,8 +96,7 @@
     </div>
 
 
-
-    <style>
+<style>
     body{
         height: calc(100vh - 4em);
         padding: 2em;
@@ -179,8 +184,6 @@
         color: #325093;
 
     }
-
-
 </style>
 
 </body>
